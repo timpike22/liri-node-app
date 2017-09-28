@@ -4,8 +4,10 @@ var spotify = require ("node-spotify-api");
 var request = require ("request");
 var keys = require('./keys.js');
 var argVar1 = process.argv[2];
-var argVar2 = process.argv[3];
-
+var argVar2 = " ";
+for (var i = 3; i < process.argv.length; i++) {
+    argVar2 +=  process.argv[i] + " ";
+}
 
 function initializer(){
     switch(argVar1){
@@ -22,8 +24,12 @@ function initializer(){
     check_movie();
     break;
     
+    case "do_what_it_says":
+    do_it();
+    break;
+
     default:
-    console.log("Please enter a command (i.e. my_tweets | spotify_this_song | movie_this");
+    console.log("Please enter a command (i.e. my_tweets | spotify_this_song | movie_this | do_it");
 
     }
 
@@ -47,8 +53,9 @@ function myTweets(){
 };
 
 
-function check_movie(){
-    if(argVar2 === undefined){
+function check_movie() {
+
+    if(argVar2 === " "){
        argVar2 = "Mr.Nobody";
    }
    queryUrl = "http://www.omdbapi.com/?t=" + argVar2 + "&y=&plot=short&apikey=40e9cece";
@@ -70,11 +77,11 @@ function check_movie(){
           console.log("Oops! try again!");
       }
     });
-   };
+   }
 
 function spotify_song(){
     spotify = new spotify(keys.spotifyKeys);
-    if(argVar2 === undefined){
+    if(argVar2 === " "){
         argVar2 = "I Want It That Way";
     }
     
@@ -95,8 +102,19 @@ function spotify_song(){
                 }
            }
         
-      });
-    };
+      });  
+    }
+    function do_it(){
+        
+        fs.readFile("random.txt", "utf8", function(error, data){
+            
+        if(error){
+            return console.log(error);
+        }   
+        console.log(data)
+            
+        });
+    }
+
 
 initializer();
-
