@@ -1,10 +1,11 @@
 var fs = require ("fs");
 var twitter = require ("twitter");
-var spotify = require ("spotify");
+var spotify = require ("node-spotify-api");
 var request = require ("request");
 var keys = require('./keys.js');
 var argVar1 = process.argv[2];
 var argVar2 = process.argv[3];
+
 
 function initializer(){
     switch(argVar1){
@@ -17,14 +18,14 @@ function initializer(){
     spotify_song();
     break;
 
-    case "check_this_movie":
+    case "movie_this":
     check_movie();
     break;
     
     default:
-    console.log("Please enter a command (i.e. my_tweets | spotify_this_song | check_this_movie");
+    console.log("Please enter a command (i.e. my_tweets | spotify_this_song | movie_this");
 
-    };
+    }
 
 };
 
@@ -71,38 +72,31 @@ function check_movie(){
     });
    };
 
-
-
 function spotify_song(){
-   // var queryTrack;
-    if(argVar2 == undefined){
+    spotify = new spotify(keys.spotifyKeys);
+    if(argVar2 === undefined){
         argVar2 = "I Want It That Way";
     }
     
-        
-    spotify.spotifyKeys.search({ type: 'track', query: argVar2, count: 20 }, function(error, data){
+    spotify.search({ type: 'track', query: argVar2, count: 20 }, function(error, data){
         if(error){
            return console.log("error");
       } else  {
-          console.log(data.tracks.items);
-      }
-    });
-          //  var trackInfo = data.tracks.items;
-           // console.log(trackInfo);
+          var trackInfo = data.tracks.items;
+           console.log(trackInfo);
             
-           // for (i = 0; i < trackInfo.length; i++){
-                //console.log(i + 1)
-           //     console.log("Track: " + trackInfo[i].name);
-            //    console.log("Artist: " + trackInfo[i].artists[0].name);
-           //     console.log("Album: " + trackInfo[i].album.name);
-           //     console.log("Link: " + trackInfo[i].href);
-         //       console.log("\n ------------------");       
-              //  }
-          //  }
+           for (i = 0; i < trackInfo.length; i++){
+                console.log(i + 1)
+                console.log("Track: " + trackInfo[i].name);
+                console.log("Artist: " + trackInfo[i].artists[0].name);
+                console.log("Album: " + trackInfo[i].album.name);
+                console.log("Link: " + trackInfo[i].href);
+                console.log("\n ------------------");       
+                }
+           }
         
-     //   });
- }
-
+      });
+    };
 
 initializer();
 
